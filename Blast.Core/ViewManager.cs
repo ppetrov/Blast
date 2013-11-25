@@ -8,7 +8,12 @@ namespace Blast.Core
 	public abstract class ViewManager<T> : ViewModel
 		where T : ViewModel
 	{
-		protected List<T> AllViewModels { get; private set; }
+		private ObservableCollection<T> _allViewModels = new ObservableCollection<T>();
+		public ObservableCollection<T> AllViewModels
+		{
+			get { return _allViewModels; }
+			private set { this.SetProperty(ref _allViewModels, value); }
+		}
 
 		private ObservableCollection<T> _viewModels = new ObservableCollection<T>();
 		public ObservableCollection<T> ViewModels
@@ -20,16 +25,11 @@ namespace Blast.Core
 		public ViewModelSort<T> ModelSort { get; set; }
 		public ViewModelSearch<T> ModelSearch { get; set; }
 
-		protected ViewManager()
-		{
-			this.AllViewModels = new List<T>();
-		}
-
 		public void Load(List<T> items, SortOption<T> sortOption = null, SearchOption<T> searchOption = null, string value = null)
 		{
 			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Item);
 
-			this.AllViewModels = items;
+			this.AllViewModels = new ObservableCollection<T>(items);
 
 			this.Sort(items, sortOption);
 			this.SearchImp(value, searchOption);

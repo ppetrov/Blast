@@ -1,4 +1,4 @@
-﻿using System.Collections.Generic;
+﻿using System.Collections.ObjectModel;
 
 namespace Blast.Core.Search
 {
@@ -13,7 +13,7 @@ namespace Blast.Core.Search
 			this.OptionSearch = optionSearch;
 		}
 
-		public List<T> Search(List<T> items, string value = null, SearchOption<T> option = null)
+		public ObservableCollection<T> Search(ObservableCollection<T> items, string value = null, SearchOption<T> option = null)
 		{
 			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
 

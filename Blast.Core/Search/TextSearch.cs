@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace Blast.Core.Search
 {
@@ -11,7 +12,7 @@ namespace Blast.Core.Search
 			this.Value = string.Empty;
 		}
 
-		public List<T> FindAll(List<T> items, string value)
+		public ObservableCollection<T> FindAll(ObservableCollection<T> items, string value)
 		{
 			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
 			if (value == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Value);
@@ -30,7 +31,7 @@ namespace Blast.Core.Search
 					}
 				}
 
-				return result;
+				return new ObservableCollection<T>(result);
 			}
 
 			return items;

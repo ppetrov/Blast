@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 
 namespace Blast.Core.Search
@@ -17,7 +18,7 @@ namespace Blast.Core.Search
 			this.Current = this.GetDefaultOrFirst();
 		}
 
-		public void SetupCount(List<T> items)
+		public void SetupCount(ObservableCollection<T> items)
 		{
 			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
 
@@ -34,7 +35,7 @@ namespace Blast.Core.Search
 			this.Current = option;
 		}
 
-		public void Setup(List<T> items, SearchOption<T> option)
+		public void Setup(ObservableCollection<T> items, SearchOption<T> option)
 		{
 			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
 			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
@@ -43,7 +44,7 @@ namespace Blast.Core.Search
 			this.SetupCount(items);
 		}
 
-		public List<T> FindAll(List<T> items, SearchOption<T> option)
+		public ObservableCollection<T> FindAll(ObservableCollection<T> items, SearchOption<T> option)
 		{
 			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
 			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
@@ -58,7 +59,8 @@ namespace Blast.Core.Search
 					matching.Add(v);
 				}
 			}
-			return matching;
+
+			return new ObservableCollection<T>(matching);
 		}
 
 		private SearchOption<T> GetDefaultOrFirst()
