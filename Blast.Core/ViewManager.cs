@@ -25,6 +25,11 @@ namespace Blast.Core
 		public ViewModelSort<T> ModelSort { get; set; }
 		public ViewModelSearch<T> ModelSearch { get; set; }
 
+		public virtual void SetupViewModels(IEnumerable<T> viewModels)
+		{
+			this.ViewModels = new ObservableCollection<T>(viewModels);
+		}
+
 		public void Load(List<T> items, SortOption<T> sortOption = null, SearchOption<T> searchOption = null, string value = null)
 		{
 			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Item);
@@ -88,11 +93,6 @@ namespace Blast.Core
 			{
 				modelSort.Sort(viewModels, option);
 			}
-		}
-
-		private void SetupViewModels(IEnumerable<T> viewModels)
-		{
-			this.ViewModels = new ObservableCollection<T>(viewModels);
 		}
 	}
 }
