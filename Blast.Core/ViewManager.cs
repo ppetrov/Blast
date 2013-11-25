@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Threading.Tasks;
 using Blast.Core.Search;
 using Blast.Core.Sort;
 
@@ -27,18 +25,18 @@ namespace Blast.Core
 			this.AllViewModels = new List<T>();
 		}
 
-		public void Load(List<T> viewModels, SortOption<T> sortOption = null, SearchOption<T> searchOption = null, string value = null)
+		public void Load(List<T> items, SortOption<T> sortOption = null, SearchOption<T> searchOption = null, string value = null)
 		{
-			if (viewModels == null) throw new ArgumentNullException("viewModels");
+			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Item);
 
-			this.AllViewModels = viewModels;
+			this.AllViewModels = items;
 
-			this.Sort(viewModels, sortOption);
-			this.SearchImp(value ?? this.GetCurrentValue(), searchOption ?? this.GetCurrentOption());
+			this.Sort(items, sortOption);
+			this.SearchImp(value, searchOption);
 
 			if (this.ModelSearch == null)
 			{
-				this.SetupViewModels(viewModels);
+				this.SetupViewModels(items);
 			}
 		}
 
@@ -47,30 +45,29 @@ namespace Blast.Core
 			var modelSort = this.ModelSort;
 			if (modelSort != null)
 			{
-				var current = option ?? modelSort.Current;
-				modelSort.Sort(this.AllViewModels, current);
-				this.ViewModels = modelSort.Sort(this.ViewModels, current);
+				modelSort.Sort(this.AllViewModels);
+				this.ViewModels = modelSort.Sort(this.ViewModels);
 			}
 		}
 
 		public void Search(string value)
 		{
-			if (value == null) throw new ArgumentNullException("value");
+			if (value == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Value);
 
-			this.SearchImp(value, this.GetCurrentOption());
+			this.SearchImp(value, null);
 		}
 
 		public void Search(SearchOption<T> option)
 		{
-			if (option == null) throw new ArgumentNullException("option");
+			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
 
-			this.SearchImp(this.GetCurrentValue(), option);
+			this.SearchImp(null, option);
 		}
 
 		public void Search(string value, SearchOption<T> option)
 		{
-			if (value == null) throw new ArgumentNullException("value");
-			if (option == null) throw new ArgumentNullException("option");
+			if (value == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Value);
+			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
 
 			this.SearchImp(value, option);
 		}
@@ -89,41 +86,8 @@ namespace Blast.Core
 			var modelSort = this.ModelSort;
 			if (modelSort != null)
 			{
-				modelSort.Sort(viewModels, option ?? modelSort.Current);
+				modelSort.Sort(viewModels, option);
 			}
-		}
-
-		private SearchOption<T> GetCurrentOption()
-		{
-			SearchOption<T> current = null;
-
-			var filter = this.ModelSearch;
-			if (filter != null)
-			{
-				var optionSearch = filter.OptionSearch;
-				if (optionSearch != null)
-				{
-					current = optionSearch.Current ?? optionSearch.GetDefaultOrFirst();
-				}
-			}
-			return current;
-		}
-
-		private string GetCurrentValue()
-		{
-			var current = string.Empty;
-
-			var filter = this.ModelSearch;
-			if (filter != null)
-			{
-				var textSearch = filter.TextSearch;
-				if (textSearch != null)
-				{
-					current = textSearch.Value;
-				}
-			}
-
-			return current;
 		}
 
 		private void SetupViewModels(IEnumerable<T> viewModels)

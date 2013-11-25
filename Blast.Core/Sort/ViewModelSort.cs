@@ -1,84 +1,31 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace Blast.Core.Sort
 {
 	public abstract class ViewModelSort<T> where T : ViewModel
 	{
-		public SortOption<T> Current { get; private set; }
-		public SortOption<T>[] Options { get; private set; }
+		public OptionSort<T> OptionSort { get; private set; }
 
-		protected ViewModelSort(SortOption<T>[] options)
+		protected ViewModelSort(OptionSort<T> option)
 		{
-			if (options == null) throw new ArgumentNullException("options");
-			if (options.Length == 0) throw new ArgumentOutOfRangeException("options");
+			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
 
-			this.Options = options;
-			this.Current = options.First(o => o.IsDefault) ?? options.First();
+			this.OptionSort = option;
 		}
 
-		public void SetupCurrent(SortOption<T> option)
+		public void Sort(List<T> items, SortOption<T> option = null)
 		{
-			if (option == null) throw new ArgumentNullException("option");
+			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
 
-			this.Current = option;
+			this.OptionSort.Sort(items, option ?? this.OptionSort.Current);
 		}
 
-		public void SetupDicrection(SortOption<T> option)
+		public ObservableCollection<T> Sort(ObservableCollection<T> items, SortOption<T> option = null)
 		{
-			if (option == null) throw new ArgumentNullException("option");
+			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
 
-			if (option.Direction.HasValue)
-			{
-				option.Direction = option.Direction.Value == SortDirection.Ascending
-					? SortDirection.Descending
-					: SortDirection.Ascending;
-			}
-			else
-			{
-				option.Direction = SortDirection.Ascending;
-			}
-			foreach (var o in this.Options)
-			{
-				if (o != option)
-				{
-					o.Direction = null;
-				}
-			}
-		}
-
-		public void Setup(SortOption<T> option)
-		{
-			if (option == null) throw new ArgumentNullException("option");
-
-			this.SetupCurrent(option);
-			this.SetupDicrection(option);
-		}
-
-		public void Sort(List<T> viewModels, SortOption<T> option)
-		{
-			if (viewModels == null) throw new ArgumentNullException("viewModels");
-			if (option == null) throw new ArgumentNullException("option");
-
-			this.Setup(option);
-
-			viewModels.Sort(option.Sort);
-		}
-
-		public ObservableCollection<T> Sort(ObservableCollection<T> viewModels, SortOption<T> option)
-		{
-			if (viewModels == null) throw new ArgumentNullException("viewModels");
-			if (option == null) throw new ArgumentNullException("option");
-
-			this.Setup(option);
-
-			var items = new T[viewModels.Count];
-			viewModels.CopyTo(items, 0);
-			Array.Sort(items, option.Sort);
-
-			return new ObservableCollection<T>(items);
+			return this.OptionSort.Sort(items, option ?? this.OptionSort.Current);
 		}
 	}
 }

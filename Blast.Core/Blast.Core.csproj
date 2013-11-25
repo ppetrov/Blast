@@ -37,9 +37,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseOption.cs" />
+    <Compile Include="ExceptionHelper.cs" />
     <Compile Include="Search\OptionSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\SearchOption.cs" />
+    <Compile Include="Sort\OptionSort.cs" />
     <Compile Include="Sort\SortDirection.cs" />
     <Compile Include="Sort\SortOption.cs" />
     <Compile Include="Search\TextSearch.cs" />

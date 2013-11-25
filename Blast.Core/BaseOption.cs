@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Blast.Core
+﻿namespace Blast.Core
 {
 	public abstract class BaseOption : ViewModel
 	{
@@ -9,7 +7,7 @@ namespace Blast.Core
 
 		protected BaseOption(string name, bool isDefault = false)
 		{
-			if (name == null) throw new ArgumentNullException("name");
+			if (name == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Name);
 
 			this.Name = name;
 			this.IsDefault = isDefault;

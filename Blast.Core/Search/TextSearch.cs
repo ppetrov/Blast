@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace Blast.Core.Search
 {
@@ -12,18 +11,18 @@ namespace Blast.Core.Search
 			this.Value = string.Empty;
 		}
 
-		public List<T> FindAll(List<T> viewModels, string value)
+		public List<T> FindAll(List<T> items, string value)
 		{
-			if (viewModels == null) throw new ArgumentNullException("viewModels");
-			if (value == null) throw new ArgumentNullException("value");
+			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
+			if (value == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Value);
 
 			this.Value = value;
 
-			if (viewModels.Count > 0 && value != string.Empty)
+			if (items.Count > 0 && value != string.Empty)
 			{
 				var result = new List<T>();
 
-				foreach (var v in viewModels)
+				foreach (var v in items)
 				{
 					if (this.IsMatch(v, value))
 					{
@@ -34,7 +33,7 @@ namespace Blast.Core.Search
 				return result;
 			}
 
-			return viewModels;
+			return items;
 		}
 
 		public abstract bool IsMatch(T viewModel, string value);

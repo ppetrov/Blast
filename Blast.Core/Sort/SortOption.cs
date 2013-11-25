@@ -5,7 +5,7 @@ namespace Blast.Core.Sort
 	public abstract class SortOption<T> : BaseOption
 		where T : ViewModel
 	{
-		public Comparison<T> Sort { get; private set; }
+		public Comparison<T> Comparison { get; private set; }
 		private SortDirection? _direction;
 		public SortDirection? Direction
 		{
@@ -13,12 +13,12 @@ namespace Blast.Core.Sort
 			set { this.SetProperty(ref _direction, value); }
 		}
 
-		protected SortOption(string name, Comparison<T> sort, bool isDefault = false)
+		protected SortOption(string name, Comparison<T> comparison, bool isDefault = false)
 			: base(name, isDefault)
 		{
-			if (sort == null) throw new ArgumentNullException("sort");
+			if (comparison == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Comparison);
 
-			this.Sort = sort;
+			this.Comparison = comparison;
 		}
 	}
 }

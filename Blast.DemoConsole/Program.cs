@@ -39,7 +39,7 @@ namespace Blast.DemoConsole
 				DisplayView(m);
 
 				// Set to 'B'
-				//m.Search(m.ModelSearch.OptionSearch.Options.Last());
+				//m.Match(m.ModelSearch.OptionSearch.Options.Last());
 
 				DisplayView(m);
 			}

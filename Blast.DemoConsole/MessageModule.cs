@@ -7,7 +7,7 @@ namespace Blast.DemoConsole
 {
 	public class MessageModule
 	{
-		 
+
 	}
 
 	public class Message : BaseObject
@@ -44,16 +44,6 @@ namespace Blast.DemoConsole
 
 	public class MessageViewModelSearch : ViewModelSearch<MessageViewModel>
 	{
-		public MessageViewModelSearch(TextSearch<MessageViewModel> textSearch)
-			: base(textSearch)
-		{
-		}
-
-		public MessageViewModelSearch(OptionSearch<MessageViewModel> optionSearch)
-			: base(optionSearch)
-		{
-		}
-
 		public MessageViewModelSearch(TextSearch<MessageViewModel> textSearch, OptionSearch<MessageViewModel> optionSearch)
 			: base(textSearch, optionSearch)
 		{
@@ -72,8 +62,8 @@ namespace Blast.DemoConsole
 
 	public class MessageViewModelSearchOption : SearchOption<MessageViewModel>
 	{
-		public MessageViewModelSearchOption(string name, Func<MessageViewModel, bool> search, bool isDefault = false)
-			: base(name, search, isDefault)
+		public MessageViewModelSearchOption(string name, Func<MessageViewModel, bool> match, bool isDefault = false)
+			: base(name, match, isDefault)
 		{
 		}
 	}

@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 
 namespace Blast.Core.Search
 {
@@ -9,46 +7,53 @@ namespace Blast.Core.Search
 		public TextSearch<T> TextSearch { get; private set; }
 		public OptionSearch<T> OptionSearch { get; private set; }
 
-		protected ViewModelSearch(TextSearch<T> textSearch)
+		protected ViewModelSearch(TextSearch<T> textSearch = null, OptionSearch<T> optionSearch = null)
 		{
-			if (textSearch == null) throw new ArgumentNullException("textSearch");
-
-			this.TextSearch = textSearch;
-		}
-
-		protected ViewModelSearch(OptionSearch<T> optionSearch)
-		{
-			if (optionSearch == null) throw new ArgumentNullException("optionSearch");
-
-			this.OptionSearch = optionSearch;
-		}
-
-		protected ViewModelSearch(TextSearch<T> textSearch, OptionSearch<T> optionSearch)
-		{
-			if (textSearch == null) throw new ArgumentNullException("textSearch");
-			if (optionSearch == null) throw new ArgumentNullException("optionSearch");
-
 			this.TextSearch = textSearch;
 			this.OptionSearch = optionSearch;
 		}
 
-		public List<T> Search(List<T> viewModels, string search, SearchOption<T> option)
+		public List<T> Search(List<T> items, string value = null, SearchOption<T> option = null)
 		{
-			if (viewModels == null) throw new ArgumentNullException("viewModels");
-			if (search == null) throw new ArgumentNullException("search");
-			if (option == null) throw new ArgumentNullException("option");
+			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
 
-			var current = viewModels;
+			var current = items;
 			var textSearch = this.TextSearch;
 			if (textSearch != null)
 			{
-				current = textSearch.FindAll(viewModels, search);
+				current = textSearch.FindAll(items, value ?? this.GetCurrentValue());
 			}
 			var optionSearch = this.OptionSearch;
 			if (optionSearch != null)
 			{
-				current = optionSearch.FindAll(current, option);
+				current = optionSearch.FindAll(current, option ?? this.GetCurrentOption());
 			}
+			return current;
+		}
+
+		private string GetCurrentValue()
+		{
+			var current = string.Empty;
+
+			var textSearch = this.TextSearch;
+			if (textSearch != null)
+			{
+				current = textSearch.Value;
+			}
+
+			return current;
+		}
+
+		private SearchOption<T> GetCurrentOption()
+		{
+			SearchOption<T> current = null;
+
+			var optionSearch = this.OptionSearch;
+			if (optionSearch != null)
+			{
+				current = optionSearch.Current;
+			}
+
 			return current;
 		}
 	}

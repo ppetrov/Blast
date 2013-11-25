@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace Blast.Core.Search
@@ -11,14 +10,58 @@ namespace Blast.Core.Search
 
 		protected OptionSearch(SearchOption<T>[] options)
 		{
-			if (options == null) throw new ArgumentNullException("options");
-			if (options.Length == 0) throw new ArgumentOutOfRangeException("options");
+			if (options == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Options);
+			if (options.Length == 0) ExceptionHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.Options);
 
 			this.Options = options;
 			this.Current = this.GetDefaultOrFirst();
 		}
 
-		public SearchOption<T> GetDefaultOrFirst()
+		public void SetupCount(List<T> items)
+		{
+			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
+
+			foreach (var o in this.Options)
+			{
+				o.Count = items.Count(o.Match);
+			}
+		}
+
+		public void SetupCurrent(SearchOption<T> option)
+		{
+			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
+
+			this.Current = option;
+		}
+
+		public void Setup(List<T> items, SearchOption<T> option)
+		{
+			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
+			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
+
+			this.SetupCurrent(option);
+			this.SetupCount(items);
+		}
+
+		public List<T> FindAll(List<T> items, SearchOption<T> option)
+		{
+			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
+			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
+
+			this.Setup(items, option);
+
+			var matching = new List<T>();
+			foreach (var v in items)
+			{
+				if (option.Match(v))
+				{
+					matching.Add(v);
+				}
+			}
+			return matching;
+		}
+
+		private SearchOption<T> GetDefaultOrFirst()
 		{
 			foreach (var o in this.Options)
 			{
@@ -27,51 +70,7 @@ namespace Blast.Core.Search
 					return o;
 				}
 			}
-			return this.Options.First();
-		}
-
-		public void SetupCount(List<T> viewModels)
-		{
-			if (viewModels == null) throw new ArgumentNullException("viewModels");
-
-			foreach (var o in this.Options)
-			{
-				o.Count = viewModels.Count(o.Search);
-			}
-		}
-
-		public void SetupCurrent(SearchOption<T> option)
-		{
-			if (option == null) throw new ArgumentNullException("option");
-
-			this.Current = option;
-		}
-
-		public void Setup(List<T> viewModels, SearchOption<T> option)
-		{
-			if (viewModels == null) throw new ArgumentNullException("viewModels");
-			if (option == null) throw new ArgumentNullException("option");
-
-			this.SetupCurrent(option);
-			this.SetupCount(viewModels);
-		}
-
-		public List<T> FindAll(List<T> viewModels, SearchOption<T> option)
-		{
-			if (viewModels == null) throw new ArgumentNullException("viewModels");
-			if (option == null) throw new ArgumentNullException("option");
-
-			this.Setup(viewModels, option);
-
-			var matching = new List<T>();
-			foreach (var v in viewModels)
-			{
-				if (option.Search(v))
-				{
-					matching.Add(v);
-				}
-			}
-			return matching;
+			return this.Options[0];
 		}
 	}
 }
