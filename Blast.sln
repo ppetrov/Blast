@@ -7,6 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blast.Core", "Blast.Core\Bl
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blast.DemoConsole", "Blast.DemoConsole\Blast.DemoConsole.csproj", "{3B0C2740-3D51-401A-8699-A872CDFDA3D9}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{2AFECBAC-369C-4C05-8C84-3E7AD831C869}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blast.Core.Tests", "Blast.Core.Tests\Blast.Core.Tests.csproj", "{B78EE292-6586-4211-B0AD-11E50A585B52}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,8 +25,15 @@ Global
 		{3B0C2740-3D51-401A-8699-A872CDFDA3D9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3B0C2740-3D51-401A-8699-A872CDFDA3D9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3B0C2740-3D51-401A-8699-A872CDFDA3D9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B78EE292-6586-4211-B0AD-11E50A585B52}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B78EE292-6586-4211-B0AD-11E50A585B52}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B78EE292-6586-4211-B0AD-11E50A585B52}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B78EE292-6586-4211-B0AD-11E50A585B52}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B78EE292-6586-4211-B0AD-11E50A585B52} = {2AFECBAC-369C-4C05-8C84-3E7AD831C869}
 	EndGlobalSection
 EndGlobal
