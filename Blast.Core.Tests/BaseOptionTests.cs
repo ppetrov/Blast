@@ -36,7 +36,6 @@ namespace Blast.Core.Tests
 			Assert.AreEqual(name, o1.Name);
 			Assert.AreEqual(true, o1.IsDefault);
 		}
-
 	}
 
 	public class TestBaseOption : BaseOption
