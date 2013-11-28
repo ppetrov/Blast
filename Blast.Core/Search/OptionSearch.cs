@@ -18,6 +18,16 @@ namespace Blast.Core.Search
 			this.Current = this.GetDefaultOrFirst();
 		}
 
+		public ObservableCollection<T> Search(ObservableCollection<T> items, SearchOption<T> option)
+		{
+			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
+			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
+
+			this.SetupCurrent(option);
+			this.SetupCount(items);
+			return this.FindAll(items, option);
+		}
+
 		public void SetupCount(ObservableCollection<T> items)
 		{
 			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
@@ -35,23 +45,13 @@ namespace Blast.Core.Search
 			this.Current = option;
 		}
 
-		public void Setup(ObservableCollection<T> items, SearchOption<T> option)
-		{
-			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
-			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
-
-			this.SetupCurrent(option);
-			this.SetupCount(items);
-		}
-
 		public ObservableCollection<T> FindAll(ObservableCollection<T> items, SearchOption<T> option)
 		{
 			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
 			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
 
-			this.Setup(items, option);
-
 			var matching = new List<T>();
+
 			foreach (var v in items)
 			{
 				if (option.Match(v))

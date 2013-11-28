@@ -40,6 +40,9 @@
   <ItemGroup>
     <Compile Include="BaseOptionTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Search\OptionSearchTests.cs" />
+    <Compile Include="Search\SearchOptionTests.cs" />
+    <Compile Include="ViewModelTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Blast.Core\Blast.Core.csproj">

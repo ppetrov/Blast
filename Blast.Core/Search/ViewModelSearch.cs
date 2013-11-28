@@ -26,7 +26,7 @@ namespace Blast.Core.Search
 			var optionSearch = this.OptionSearch;
 			if (optionSearch != null)
 			{
-				current = optionSearch.FindAll(current, option ?? this.GetCurrentOption());
+				current = optionSearch.Search(current, option ?? this.GetCurrentOption());
 			}
 			return current;
 		}
