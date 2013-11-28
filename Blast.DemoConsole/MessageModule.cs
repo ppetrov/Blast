@@ -62,8 +62,8 @@ namespace Blast.DemoConsole
 
 	public class MessageViewModelSearchOption : SearchOption<MessageViewModel>
 	{
-		public MessageViewModelSearchOption(string name, Func<MessageViewModel, bool> match, bool isDefault = false)
-			: base(name, match, isDefault)
+		public MessageViewModelSearchOption(string name, Func<MessageViewModel, bool> isMatch, bool isDefault = false)
+			: base(name, isMatch, isDefault)
 		{
 		}
 	}

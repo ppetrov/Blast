@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -39,7 +40,7 @@ namespace Blast.DemoConsole
 				DisplayView(m);
 
 				// Set to 'B'
-				//m.Match(m.ModelSearch.OptionSearch.Options.Last());
+				//m.IsMatch(m.ModelSearch.OptionSearch.Options.Last());
 
 				DisplayView(m);
 			}
@@ -54,7 +55,7 @@ namespace Blast.DemoConsole
 			var ms = m.ModelSearch;
 			if (ms != null)
 			{
-				Console.WriteLine("'" + ms.TextSearch.Value + "'");
+				Console.WriteLine("'" + ms.TextSearch.Current + "'");
 				foreach (var o in ms.OptionSearch.Options)
 				{
 					var v = o.Name + "(" + o.Count + ")";
@@ -65,7 +66,7 @@ namespace Blast.DemoConsole
 					Console.WriteLine(v);
 				}
 			}
-			
+
 			Console.WriteLine();
 			foreach (var viewModel in m.ViewModels)
 			{

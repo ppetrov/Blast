@@ -38,7 +38,7 @@ namespace Blast.Core.Search
 			var textSearch = this.TextSearch;
 			if (textSearch != null)
 			{
-				current = textSearch.Value;
+				current = textSearch.Current;
 			}
 
 			return current;

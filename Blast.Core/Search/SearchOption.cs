@@ -5,7 +5,7 @@ namespace Blast.Core.Search
 	public abstract class SearchOption<T> : BaseOption
 		where T : ViewModel
 	{
-		public Func<T, bool> Match { get; private set; }
+		public Func<T, bool> IsMatch { get; private set; }
 		private int _count;
 		public int Count
 		{
@@ -13,12 +13,12 @@ namespace Blast.Core.Search
 			set { this.SetProperty(ref _count, value); }
 		}
 
-		protected SearchOption(string name, Func<T, bool> match, bool isDefault = false)
+		protected SearchOption(string name, Func<T, bool> isMatch, bool isDefault = false)
 			: base(name, isDefault)
 		{
-			if (match == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Match);
+			if (isMatch == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Match);
 
-			this.Match = match;
+			this.IsMatch = isMatch;
 		}
 	}
 }

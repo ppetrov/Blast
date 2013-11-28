@@ -28,7 +28,7 @@ namespace Blast.Core.Tests.Search
 			var o = new TestSearchOption(name, f);
 
 			Assert.AreEqual(name, o.Name);
-			Assert.AreSame(f, o.Match);
+			Assert.AreSame(f, o.IsMatch);
 		}
 
 		[Test]
@@ -52,7 +52,7 @@ namespace Blast.Core.Tests.Search
 			}
 
 			Assert.AreEqual(name, o.Name);
-			Assert.AreSame(f, o.Match);
+			Assert.AreSame(f, o.IsMatch);
 			Assert.AreEqual(value, o.Count);
 			Assert.IsTrue(fired);
 		}
@@ -60,8 +60,8 @@ namespace Blast.Core.Tests.Search
 
 	public class TestSearchOption : SearchOption<TestViewModel>
 	{
-		public TestSearchOption(string name, Func<TestViewModel, bool> match, bool isDefault = false)
-			: base(name, match, isDefault)
+		public TestSearchOption(string name, Func<TestViewModel, bool> isMatch, bool isDefault = false)
+			: base(name, isMatch, isDefault)
 		{
 		}
 	}

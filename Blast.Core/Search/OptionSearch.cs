@@ -15,17 +15,15 @@ namespace Blast.Core.Search
 			if (options.Length == 0) ExceptionHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.Options);
 
 			this.Options = options;
-			this.Current = this.GetDefaultOrFirst();
-		}
-
-		public ObservableCollection<T> Search(ObservableCollection<T> items, SearchOption<T> option)
-		{
-			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
-			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
-
-			this.SetupCurrent(option);
-			this.SetupCount(items);
-			return this.FindAll(items, option);
+			SearchOption<T> option = null;
+			foreach (var o in this.Options)
+			{
+				if (o.IsDefault)
+				{
+					option = o;
+				}
+			}
+			this.Current = option ?? options[0];
 		}
 
 		public void SetupCount(ObservableCollection<T> items)
@@ -34,7 +32,7 @@ namespace Blast.Core.Search
 
 			foreach (var o in this.Options)
 			{
-				o.Count = items.Count(o.Match);
+				o.Count = items.Count(o.IsMatch);
 			}
 		}
 
@@ -50,29 +48,28 @@ namespace Blast.Core.Search
 			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
 			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
 
-			var matching = new List<T>();
+			var result = new List<T>();
 
 			foreach (var v in items)
 			{
-				if (option.Match(v))
+				if (option.IsMatch(v))
 				{
-					matching.Add(v);
+					result.Add(v);
 				}
 			}
 
-			return new ObservableCollection<T>(matching);
+			return new ObservableCollection<T>(result);
 		}
 
-		private SearchOption<T> GetDefaultOrFirst()
+		public ObservableCollection<T> Search(ObservableCollection<T> items, SearchOption<T> option)
 		{
-			foreach (var o in this.Options)
-			{
-				if (o.IsDefault)
-				{
-					return o;
-				}
-			}
-			return this.Options[0];
+			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
+			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
+
+			this.SetupCurrent(option);
+			this.SetupCount(items);
+
+			return this.FindAll(items, option);
 		}
 	}
 }
