@@ -2,7 +2,7 @@
 
 namespace Blast.Core.Setup
 {
-	public interface ISetupCollection<T> where T : ViewModel
+	public interface ICollectionSetup<T> where T : ViewModel
 	{
 		ObservableCollection<T> Setup(ObservableCollection<T> current, ObservableCollection<T> items);
 	}

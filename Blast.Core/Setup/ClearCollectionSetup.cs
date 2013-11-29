@@ -2,7 +2,7 @@
 
 namespace Blast.Core.Setup
 {
-	public sealed class ClearCollectionSetupCollection<T> : ISetupCollection<T>
+	public sealed class ClearCollectionSetup<T> : ICollectionSetup<T>
 		where T : ViewModel
 	{
 		public ObservableCollection<T> Setup(ObservableCollection<T> current, ObservableCollection<T> items)

@@ -9,10 +9,10 @@ namespace Blast.Core
 	public abstract class ViewManager<T> : ViewModel
 		where T : ViewModel
 	{
-		private readonly ISetupCollection<T> _setupCollection;
-		public ISetupCollection<T> SetupCollection
+		private readonly ICollectionSetup<T> _collectionSetup;
+		public ICollectionSetup<T> CollectionSetup
 		{
-			get { return _setupCollection; }
+			get { return _collectionSetup; }
 		}
 
 		private ObservableCollection<T> _allViewModels = new ObservableCollection<T>();
@@ -33,14 +33,14 @@ namespace Blast.Core
 		public ViewModelSearch<T> ModelSearch { get; set; }
 
 		protected ViewManager()
-			: this(new OverwriteCollectionSetupCollection<T>())
+			: this(new OverwriteCollectionSetup<T>())
 		{ }
 
-		protected ViewManager(ISetupCollection<T> input)
+		protected ViewManager(ICollectionSetup<T> input)
 		{
 			if (input == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Input);
 
-			_setupCollection = input;
+			_collectionSetup = input;
 		}
 
 		public void Load(ICollection<T> items, SortOption<T> sortOption = null, string value = null, SearchOption<T> searchOption = null)
@@ -102,7 +102,7 @@ namespace Blast.Core
 
 		private void Setup(ObservableCollection<T> items)
 		{
-			this.ViewModels = this.SetupCollection.Setup(this.ViewModels, items);
+			this.ViewModels = this.CollectionSetup.Setup(this.ViewModels, items);
 		}
 	}
 }
