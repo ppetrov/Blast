@@ -37,7 +37,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BaseOption.cs" />
+    <Compile Include="Setup\ClearCollectionSetupCollection.cs" />
     <Compile Include="ExceptionHelper.cs" />
+    <Compile Include="Setup\ISetupCollection.cs" />
+    <Compile Include="Setup\OverwriteCollectionSetupCollection.cs" />
+    <Compile Include="Setup\OverwriteItemsSetupCollection.cs" />
     <Compile Include="Search\OptionSearch.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Search\SearchOption.cs" />

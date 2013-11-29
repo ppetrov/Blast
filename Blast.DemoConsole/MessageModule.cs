@@ -44,8 +44,8 @@ namespace Blast.DemoConsole
 
 	public class MessageViewModelSearch : ViewModelSearch<MessageViewModel>
 	{
-		public MessageViewModelSearch(TextSearch<MessageViewModel> textSearch, OptionSearch<MessageViewModel> optionSearch)
-			: base(textSearch, optionSearch)
+		public MessageViewModelSearch(TextSearch<MessageViewModel> a, OptionSearch<MessageViewModel> b)
+			: base(a, b)
 		{
 		}
 	}

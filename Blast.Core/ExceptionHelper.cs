@@ -14,10 +14,17 @@ namespace Blast.Core
 			throw new ArgumentOutOfRangeException(GetArgumentName(argument));
 		}
 
+		internal static void ThrowInvalidOperationException()
+		{
+			throw new InvalidOperationException();
+		}
+
 		internal static string GetArgumentName(ExceptionArgument argument)
 		{
 			switch (argument)
 			{
+				case ExceptionArgument.Input:
+					return @"input";
 				case ExceptionArgument.Name:
 					return @"name";
 				case ExceptionArgument.Value:
@@ -44,6 +51,9 @@ namespace Blast.Core
 
 	internal enum ExceptionArgument
 	{
+		A,
+		B,
+		Input,
 		Name,
 		Value,
 		Item,

@@ -15,15 +15,16 @@ namespace Blast.Core.Search
 			if (options.Length == 0) ExceptionHelper.ThrowArgumentOutOfRangeException(ExceptionArgument.Options);
 
 			this.Options = options;
-			SearchOption<T> option = null;
-			foreach (var o in this.Options)
+			var option = options[0];
+			foreach (var o in options)
 			{
 				if (o.IsDefault)
 				{
 					option = o;
+					break;
 				}
 			}
-			this.Current = option ?? options[0];
+			this.Current = option;
 		}
 
 		public void SetupCount(ObservableCollection<T> items)

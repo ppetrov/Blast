@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Collections.ObjectModel;
+﻿using System.Collections.ObjectModel;
 
 namespace Blast.Core.Sort
 {
@@ -14,18 +13,16 @@ namespace Blast.Core.Sort
 			this.OptionSort = option;
 		}
 
-		public void Sort(List<T> items, SortOption<T> option = null)
+		public ObservableCollection<T> Sort(ObservableCollection<T> items, SortOption<T> option)
 		{
 			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
+			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
 
-			this.OptionSort.Sort(items, option ?? this.OptionSort.Current);
-		}
+			var optionSort = this.OptionSort;
+			optionSort.SetupCurrent(option);
+			optionSort.SetupDicrection(option);
 
-		public ObservableCollection<T> Sort(ObservableCollection<T> items, SortOption<T> option = null)
-		{
-			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
-
-			return this.OptionSort.Sort(items, option ?? this.OptionSort.Current);
+			return optionSort.Sort(items, option);
 		}
 	}
 }

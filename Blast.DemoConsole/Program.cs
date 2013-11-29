@@ -13,6 +13,33 @@ namespace Blast.DemoConsole
 	{
 		static void Main(string[] args)
 		{
+			var current = new List<string> { @"B", @"C" };
+			var items = new List<string> { @"A", @"B", @"C" }; 
+
+			var inputCount = items.Count;
+			var viewModels = current;
+			var common = Math.Min(viewModels.Count, inputCount);
+			for (var i = 0; i < common; i++)
+			{
+				viewModels[i] = items[i];
+			}
+			while (viewModels.Count > inputCount)
+			{
+				viewModels.RemoveAt(viewModels.Count - 1);
+			}
+			while (viewModels.Count < inputCount)
+			{
+				var index = viewModels.Count;
+				viewModels.Insert(index, items[index]);
+			}
+
+			Console.WriteLine(current.Count);
+			foreach (var v in current)
+			{
+				Console.WriteLine(v);
+			}
+
+			return;
 			try
 			{
 				var m = new MessageViewManager();
@@ -40,7 +67,7 @@ namespace Blast.DemoConsole
 				DisplayView(m);
 
 				// Set to 'B'
-				//m.IsMatch(m.ModelSearch.OptionSearch.Options.Last());
+				//m.IsMatch(m.ModelSearch.input.Options.Last());
 
 				DisplayView(m);
 			}

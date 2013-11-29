@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Blast.Core.Search;
+using Blast.Core.Setup;
 using Blast.Core.Sort;
 
 namespace Blast.Core
@@ -8,6 +9,12 @@ namespace Blast.Core
 	public abstract class ViewManager<T> : ViewModel
 		where T : ViewModel
 	{
+		private readonly ISetupCollection<T> _setupCollection;
+		public ISetupCollection<T> SetupCollection
+		{
+			get { return _setupCollection; }
+		}
+
 		private ObservableCollection<T> _allViewModels = new ObservableCollection<T>();
 		public ObservableCollection<T> AllViewModels
 		{
@@ -25,74 +32,77 @@ namespace Blast.Core
 		public ViewModelSort<T> ModelSort { get; set; }
 		public ViewModelSearch<T> ModelSearch { get; set; }
 
-		public virtual void SetupViewModels(IEnumerable<T> viewModels)
+		protected ViewManager()
+			: this(new OverwriteCollectionSetupCollection<T>())
+		{ }
+
+		protected ViewManager(ISetupCollection<T> input)
 		{
-			this.ViewModels = new ObservableCollection<T>(viewModels);
+			if (input == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Input);
+
+			_setupCollection = input;
 		}
 
-		public void Load(List<T> items, SortOption<T> sortOption = null, SearchOption<T> searchOption = null, string value = null)
+		public void Load(ICollection<T> items, SortOption<T> sortOption = null, string value = null, SearchOption<T> searchOption = null)
 		{
-			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Item);
+			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
 
-			this.AllViewModels = new ObservableCollection<T>(items);
+			ObservableCollection<T> allViewModels;
+			ObservableCollection<T> viewModels;
 
-			this.Sort(items, sortOption);
-			this.SearchImp(value, searchOption);
-
-			if (this.ModelSearch == null)
+			var search = this.ModelSearch;
+			var sort = this.ModelSort;
+			if (search == null && sort == null)
 			{
-				this.SetupViewModels(items);
+				allViewModels = new ObservableCollection<T>(items);
+				viewModels = new ObservableCollection<T>(items);
 			}
+			else
+			{
+				var option = sortOption ?? sort.OptionSort.Current;
+				if (search != null && sort != null)
+				{
+					allViewModels = sort.Sort(new ObservableCollection<T>(items), option);
+					viewModels = search.Search(allViewModels, value, searchOption);
+				}
+				else
+				{
+					if (search == null)
+					{
+						allViewModels = sort.Sort(new ObservableCollection<T>(items), option);
+						viewModels = new ObservableCollection<T>(allViewModels);
+					}
+					else
+					{
+						allViewModels = new ObservableCollection<T>(items);
+						viewModels = search.Search(allViewModels, value, searchOption);
+					}
+				}
+			}
+
+			this.AllViewModels = allViewModels;
+			this.Setup(viewModels);
 		}
 
 		public void Sort(SortOption<T> option = null)
 		{
-			var modelSort = this.ModelSort;
-			if (modelSort != null)
-			{
-				modelSort.Sort(this.AllViewModels);
-				this.ViewModels = modelSort.Sort(this.ViewModels);
-			}
+			if (this.ModelSort == null) ExceptionHelper.ThrowInvalidOperationException();
+
+			var current = option ?? this.ModelSort.OptionSort.Current;
+			this.AllViewModels = this.ModelSort.Sort(this.AllViewModels, current);
+			this.Setup(this.ModelSort.Sort(this.ViewModels, current));
 		}
 
-		public void Search(string value)
+		public void Search(string value = null, SearchOption<T> option = null)
 		{
-			if (value == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Value);
+			if (this.ModelSearch == null) ExceptionHelper.ThrowInvalidOperationException();
 
-			this.SearchImp(value, null);
+			this.Setup(this.ModelSearch.Search(this.AllViewModels, value, option));
 		}
 
-		public void Search(SearchOption<T> option)
+		private void Setup(ObservableCollection<T> items)
 		{
-			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
-
-			this.SearchImp(null, option);
-		}
-
-		public void Search(string value, SearchOption<T> option)
-		{
-			if (value == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Value);
-			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
-
-			this.SearchImp(value, option);
-		}
-
-		private void SearchImp(string value, SearchOption<T> option)
-		{
-			var modelSearch = this.ModelSearch;
-			if (modelSearch != null)
-			{
-				this.SetupViewModels(modelSearch.Search(this.AllViewModels, value, option));
-			}
-		}
-
-		private void Sort(List<T> viewModels, SortOption<T> option)
-		{
-			var modelSort = this.ModelSort;
-			if (modelSort != null)
-			{
-				modelSort.Sort(viewModels, option);
-			}
+			this.ViewModels = this.SetupCollection.Setup(this.ViewModels, items);
 		}
 	}
 }
