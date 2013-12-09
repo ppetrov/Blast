@@ -59,17 +59,16 @@ namespace Blast.Core
 			}
 			else
 			{
-				var option = sortOption ?? sort.OptionSort.Current;
 				if (search != null && sort != null)
 				{
-					allViewModels = sort.Sort(new ObservableCollection<T>(items), option);
+					allViewModels = sort.Sort(new ObservableCollection<T>(items), sortOption ?? sort.OptionSort.Current);
 					viewModels = search.Search(allViewModels, value, searchOption);
 				}
 				else
 				{
 					if (search == null)
 					{
-						allViewModels = sort.Sort(new ObservableCollection<T>(items), option);
+						allViewModels = sort.Sort(new ObservableCollection<T>(items), sortOption ?? sort.OptionSort.Current);
 						viewModels = new ObservableCollection<T>(allViewModels);
 					}
 					else

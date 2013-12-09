@@ -7,11 +7,6 @@ namespace Blast.Core.Search
 		public TextSearch<T> TextSearch { get; private set; }
 		public OptionSearch<T> OptionSearch { get; private set; }
 
-		protected ViewModelSearch()
-		{
-
-		}
-
 		protected ViewModelSearch(TextSearch<T> input)
 		{
 			if (input == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Input);
