@@ -49,6 +49,7 @@
     <Compile Include="Sort\SortDirection.cs" />
     <Compile Include="Sort\SortOption.cs" />
     <Compile Include="Search\TextSearch.cs" />
+    <Compile Include="View.cs" />
     <Compile Include="ViewManager.cs" />
     <Compile Include="ViewModel.cs" />
     <Compile Include="Search\ViewModelSearch.cs" />
