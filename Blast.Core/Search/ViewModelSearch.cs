@@ -21,36 +21,35 @@ namespace Blast.Core.Search
 			this.OptionSearch = input;
 		}
 
-		protected ViewModelSearch(TextSearch<T> a, OptionSearch<T> b)
+		protected ViewModelSearch(TextSearch<T> x, OptionSearch<T> y)
 		{
-			if (a == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.A);
-			if (b == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.B);
+			if (x == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.X);
+			if (y == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Y);
 
-			this.TextSearch = a;
-			this.OptionSearch = b;
+			this.TextSearch = x;
+			this.OptionSearch = y;
 		}
 
 		public ObservableCollection<T> Search(ObservableCollection<T> items, string value = null, SearchOption<T> option = null)
 		{
 			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
 
-			var textSearch = this.TextSearch;
-			var optionSearch = this.OptionSearch;
-			if (textSearch != null || optionSearch != null)
+			if (this.TextSearch == null && this.OptionSearch == null)
 			{
-				var current = items;
-				if (textSearch != null)
-				{
-					current = textSearch.Search(current, value ?? textSearch.Current);
-				}
-				if (optionSearch != null)
-				{
-					current = optionSearch.Search(current, option ?? optionSearch.Current);
-				}
-				return current;
+				return new ObservableCollection<T>(items);
 			}
-
-			return new ObservableCollection<T>(items);
+			var current = items;
+			var textSearch = this.TextSearch;
+			if (textSearch != null)
+			{
+				current = textSearch.Search(current, value ?? textSearch.Current);
+			}
+			var optionSearch = this.OptionSearch;
+			if (optionSearch != null)
+			{
+				current = optionSearch.Search(current, option ?? optionSearch.Current);
+			}
+			return current;
 		}
 	}
 }

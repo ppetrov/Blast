@@ -190,6 +190,11 @@ namespace Blast.Core.Tests.Search
 
 	public class TestOptionSearch : OptionSearch<TestViewModel>
 	{
+		public static TestOptionSearch Create()
+		{
+			return new TestOptionSearch(new [] { new TestSearchOption(string.Empty, v => true), });
+		}
+
 		public TestOptionSearch(SearchOption<TestViewModel>[] options)
 			: base(options)
 		{

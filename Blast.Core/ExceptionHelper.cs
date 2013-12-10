@@ -51,8 +51,8 @@ namespace Blast.Core
 
 	internal enum ExceptionArgument
 	{
-		A,
-		B,
+		X,
+		Y,
 		Input,
 		Name,
 		Value,
