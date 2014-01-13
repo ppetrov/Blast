@@ -1,6 +1,8 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Reflection;
 using Blast.Core.Search;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Blast.Core.Tests.Search
@@ -10,22 +12,22 @@ namespace Blast.Core.Tests.Search
 		[Test]
 		public void Contructor_WithNullName_ThrowsException()
 		{
-			Assert.Throws<ArgumentNullException>(() => new TestSearchOption(null, null));
+			Assert.Throws<TargetInvocationException>(() => Substitute.For<SearchOption<ViewModel>>(null, null, false));
 		}
 
 		[Test]
 		public void Contructor_WithNullMatch_ThrowsException()
 		{
-			Assert.Throws<ArgumentNullException>(() => new TestSearchOption(string.Empty, null));
+			Assert.Throws<TargetInvocationException>(() => Substitute.For<SearchOption<ViewModel>>(string.Empty, null, false));
 		}
 
 		[Test]
 		public void Contructor_Initialize_Properties()
 		{
 			var name = @"A";
-			Func<TestViewModel, bool> f = v => true;
+			Func<ViewModel, bool> f = v => true;
 
-			var o = new TestSearchOption(name, f);
+			var o = Substitute.For<SearchOption<ViewModel>>(name, f, false);
 
 			Assert.AreEqual(name, o.Name);
 			Assert.AreSame(f, o.IsMatch);
@@ -36,10 +38,10 @@ namespace Blast.Core.Tests.Search
 		{
 			var value = 23;
 			var name = @"A";
-			Func<TestViewModel, bool> f = v => true;
+			Func<ViewModel, bool> f = v => true;
 
 			var fired = false;
-			var o = new TestSearchOption(name, f);
+			var o = Substitute.For<SearchOption<ViewModel>>(name, f, false);
 			PropertyChangedEventHandler handler = (sender, args) => { fired = true; };
 			try
 			{

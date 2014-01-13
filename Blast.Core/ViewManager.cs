@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.ObjectModel;
-using System.Linq;
+﻿using System.Collections.ObjectModel;
 
 namespace Blast.Core
 {
@@ -10,8 +8,12 @@ namespace Blast.Core
 		{
 			if (item == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Item);
 
-			this.Insert(this.AllViewModels, item, true);
-			this.Insert(this.ViewModels, item, false);
+			this.InsertAtSortedIndex(this.AllViewModels, item);
+
+			if (this.IsMatchingSearch(item))
+			{
+				this.InsertAtSortedIndex(this.ViewModels, item);
+			}
 
 			this.UpdateCount();
 		}
@@ -20,8 +22,21 @@ namespace Blast.Core
 		{
 			if (item == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Item);
 
-			this.Update(this.AllViewModels, item);
-			this.Update(this.ViewModels, item);
+			if (this.ModelSort != null)
+			{
+				this.UpdateOldNewIndexes(this.AllViewModels, item);
+			}
+			if (this.IsMatchingSearch(item))
+			{
+				if (this.ModelSort != null)
+				{
+					this.UpdateOldNewIndexes(this.ViewModels, item);
+				}
+			}
+			else
+			{
+				this.ViewModels.Remove(item);
+			}
 
 			this.UpdateCount();
 		}
@@ -30,48 +45,10 @@ namespace Blast.Core
 		{
 			if (item == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Item);
 
-			this.Delete(this.AllViewModels, item);
-			this.Delete(this.ViewModels, item);
+			this.AllViewModels.Remove(item);
+			this.ViewModels.Remove(item);
 
 			this.UpdateCount();
-		}
-
-		private void Insert(ObservableCollection<T> items, T item, bool skipSearch)
-		{
-			var index = this.FindInsertIndex(items, item, skipSearch);
-			if (index >= 0)
-			{
-				items.Insert(index, item);
-			}
-		}
-
-		private void Update(ObservableCollection<T> items, T item)
-		{
-			var index = this.FindInsertIndex(items, item, false);
-			if (index >= 0)
-			{
-				index = Math.Max(0, Math.Min(index, items.Count - 1));
-
-				var oldIndex = items.IndexOf(item);
-				if (oldIndex < 0)
-				{
-					items.Insert(index, item);
-				}
-				else
-				{
-					if (oldIndex != index)
-					{
-						var tmp = items[oldIndex];
-						items[oldIndex] = items[index];
-						items[index] = tmp;
-					}
-				}
-			}
-		}
-
-		private void Delete(ObservableCollection<T> items, T item)
-		{
-			items.Remove(item);
 		}
 
 		private void UpdateCount()
@@ -87,42 +64,55 @@ namespace Blast.Core
 			}
 		}
 
-		private int FindInsertIndex(ObservableCollection<T> items, T item, bool skipSearch)
+		private bool IsMatchingSearch(T item)
 		{
-			if (!skipSearch)
+			if (this.ModelSearch == null)
 			{
-				var modelSearch = this.ModelSearch;
-				if (modelSearch != null && !modelSearch.Search(new ObservableCollection<T> { item }).Any())
-				{
-					return -1;
-				}
+				return true;
 			}
-			var sortIndex = this.FindSortIndex(items, item);
-			if (sortIndex >= 0)
+			return this.ModelSearch.Search(new ObservableCollection<T> { item }).Count > 0;
+		}
+
+		private void InsertAtSortedIndex(ObservableCollection<T> items, T item)
+		{
+			var index = items.Count;
+			if (this.ModelSort == null)
 			{
-				return sortIndex;
+				index = this.FindSortIndex(items, item);
 			}
-			return items.Count;
+			items.Insert(index, item);
+		}
+
+		private void UpdateOldNewIndexes(ObservableCollection<T> items, T item)
+		{
+			var index = this.FindSortIndex(items, item);
+			var oldIndex = items.IndexOf(item);
+			if (index != oldIndex)
+			{
+				this.Swap(items, oldIndex, index);
+			}
 		}
 
 		private int FindSortIndex(ObservableCollection<T> items, T item)
 		{
-			if (this.ModelSort != null)
+			var index = 0;
+			var comparison = this.ModelSort.OptionSort.Current.Comparison;
+			for (var i = 0; i < items.Count; i++)
 			{
-				var index = 0;
-				var comparison = this.ModelSort.OptionSort.Current.Comparison;
-				for (var i = 0; i < items.Count; i++)
+				if (comparison(items[i], item) > 0)
 				{
-					if (comparison(items[i], item) > 0)
-					{
-						index = i;
-						break;
-					}
+					index = i;
+					break;
 				}
-				return index;
 			}
+			return index;
+		}
 
-			return -1;
+		private void Swap(ObservableCollection<T> items, int oldIndex, int newIndex)
+		{
+			var tmp = items[oldIndex];
+			items[oldIndex] = items[newIndex];
+			items[newIndex] = tmp;
 		}
 	}
 }

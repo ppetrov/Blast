@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 
 namespace Blast.Core.Search
 {
@@ -33,7 +32,16 @@ namespace Blast.Core.Search
 
 			foreach (var o in this.Options)
 			{
-				o.Count = items.Count(o.IsMatch);
+				var f = o.IsMatch;
+				var total = 0;
+				foreach (var item in items)
+				{
+					if (f(item))
+					{
+						total++;
+					}
+				}
+				o.Count = total;
 			}
 		}
 

@@ -52,7 +52,7 @@ namespace Blast.DemoConsole
 			Console.WriteLine();
 
 
-			
+
 
 		}
 	}

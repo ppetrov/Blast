@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace Blast.Core.Sort
@@ -27,16 +26,11 @@ namespace Blast.Core.Sort
 			this.Current = option;
 		}
 
-		public void SetupCurrent(SortOption<T> option)
+		public void Setup(SortOption<T> option)
 		{
 			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
 
 			this.Current = option;
-		}
-
-		public void SetupDicrection(SortOption<T> option)
-		{
-			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
 
 			if (option.Direction.HasValue)
 			{
@@ -55,14 +49,6 @@ namespace Blast.Core.Sort
 					o.Direction = null;
 				}
 			}
-		}
-
-		public void Sort(List<T> items, SortOption<T> option)
-		{
-			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
-			if (option == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Option);
-
-			items.Sort(option.Comparison);
 		}
 
 		public ObservableCollection<T> Sort(ObservableCollection<T> items, SortOption<T> option)
