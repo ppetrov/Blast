@@ -104,6 +104,14 @@ namespace Blast.DemoConsole
 
 	public class UserViewManager : ViewManager<UserViewModel>
 	{
+		public string Adapter { get; private set; }
 
+		public override void Insert(UserViewModel item)
+		{
+			// Validation Logic
+			this.Adapter = this.Adapter.Insert(0, "A");
+
+			base.Insert(item);
+		}
 	}
 }

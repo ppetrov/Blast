@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using Blast.Core.Search;
-using Blast.Core.Setup;
 using Blast.Core.Sort;
 
 namespace Blast.Core
@@ -9,12 +8,6 @@ namespace Blast.Core
 	public abstract class View<T> : ViewModel
 		where T : ViewModel
 	{
-		private readonly ICollectionSetup<T> _collectionSetup;
-		public ICollectionSetup<T> CollectionSetup
-		{
-			get { return _collectionSetup; }
-		}
-
 		private ObservableCollection<T> _allViewModels = new ObservableCollection<T>();
 		public ObservableCollection<T> AllViewModels
 		{
@@ -32,15 +25,9 @@ namespace Blast.Core
 		public ViewModelSort<T> ModelSort { get; set; }
 		public ViewModelSearch<T> ModelSearch { get; set; }
 
-		protected View()
-			: this(new OverwriteCollectionSetup<T>())
-		{ }
-
-		protected View(ICollectionSetup<T> input)
+		public virtual void Display(ObservableCollection<T> items)
 		{
-			if (input == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Input);
-
-			_collectionSetup = input;
+			this.ViewModels = items;
 		}
 
 		public void Load(ICollection<T> items, SortOption<T> sortOption = null, string value = null, SearchOption<T> searchOption = null)
@@ -80,7 +67,7 @@ namespace Blast.Core
 			}
 
 			this.AllViewModels = allViewModels;
-			this.Setup(viewModels);
+			this.Display(viewModels);
 		}
 
 		public void Sort(SortOption<T> option = null)
@@ -89,19 +76,14 @@ namespace Blast.Core
 
 			var current = option ?? this.ModelSort.OptionSort.Current;
 			this.AllViewModels = this.ModelSort.Sort(this.AllViewModels, current);
-			this.Setup(this.ModelSort.Sort(this.ViewModels, current));
+			this.Display(this.ModelSort.Sort(this.ViewModels, current));
 		}
 
 		public void Search(string value = null, SearchOption<T> option = null)
 		{
 			if (this.ModelSearch == null) ExceptionHelper.ThrowInvalidOperationException();
 
-			this.Setup(this.ModelSearch.Search(this.AllViewModels, value, option));
-		}
-
-		private void Setup(ObservableCollection<T> items)
-		{
-			this.ViewModels = this.CollectionSetup.Setup(this.ViewModels, items);
+			this.Display(this.ModelSearch.Search(this.AllViewModels, value, option));
 		}
 	}
 }
