@@ -27,6 +27,8 @@ namespace Blast.Core
 
 		public virtual void Display(ObservableCollection<T> items)
 		{
+			if (items == null) ExceptionHelper.ThrowArgumentNullException(ExceptionArgument.Items);
+
 			this.ViewModels = items;
 		}
 
@@ -74,9 +76,10 @@ namespace Blast.Core
 		{
 			if (this.ModelSort == null) ExceptionHelper.ThrowInvalidOperationException();
 
-			var current = option ?? this.ModelSort.OptionSort.Current;
-			this.AllViewModels = this.ModelSort.Sort(this.AllViewModels, current);
-			this.Display(this.ModelSort.Sort(this.ViewModels, current));
+			var modelSort = this.ModelSort;
+			var current = option ?? modelSort.OptionSort.Current;
+			this.AllViewModels = modelSort.Sort(this.AllViewModels, current);
+			this.Display(modelSort.Sort(this.ViewModels, current));
 		}
 
 		public void Search(string value = null, SearchOption<T> option = null)
